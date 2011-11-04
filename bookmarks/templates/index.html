@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+<a href="{% url latest-bookmarks %}" title="Recent bookmarks feed">
+	<img class="rss_icon" src="{{MEDIA_URL}}images/icons/feed24.png" />
+</a>
+
+<h3>Recent Bookmarks</h3>
+{% if not bookmarks %}
+<div class="message error">No bookmarks were found</div>
+{% endif %}
+
+<table id="_bookmarks" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Owner</th>
+            <th>Tags</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for bookmark in bookmarks %}
+    <tr>
+        <td>
+            <a class="bookmark" href="{% url bookmarks.bookmark_views.view bookmark.user bookmark.slug %}" title="{{bookmark.title}}">{{bookmark.title}}</a>
+        </td>
+        <td>
+            {{bookmark.url}} 
+        </td>
+        <td>
+            <a href="{% url bookmarks.bookmark_views.index bookmark.user %}" class="person">
+                    {{bookmark.user}}</a>
+        </td>
+        <td>
+             {% for t in bookmark.tags %}<a href="{% url bookmarks.views.tags t %}" class="tag">{{t}}</a>{% endfor %}
+        </td>
+        <td>{{bookmark.score|default:0}}</td>
+    </tr> 
+{% endfor %}
+    </tbody>
+</table>
+
+
+<div class="clear"></div>
+<h3>Recent Playlists</h3>
+
+{% if not playlists %}
+<div class="message error">There are no playlists</div>
+<div class="clear"></div>
+{% endif %}
+
+<div class="clear"></div>
+
+<table id="my_playlists" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Owner</th>
+            <th>Followers</th>
+            <th>Bookmarks</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for playlist in playlists %}
+    <tr>
+        <td>
+            <a href="{{ playlist.get_absolute_url }}" title="{{playlist.title}}" class="playlist">
+                {{playlist.title}}
+            </a>    
+        </td>
+        <td>
+            <a href="{% url bookmarks.bookmark_views.index playlist.user %}" class="person">
+                    {{playlist.user}}</a>
+        </td>
+        <td>{{playlist.number_of_followers}}</td>
+        <td>{{playlist.number_of_bookmarks}}</td>
+        <td>{{playlist.score}}</td>
+    </tr>
+{% endfor %}
+</table>
+
+<div class="clear"></div>
+
+{% endblock %}
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#my_playlists').dataTable({        
+        "sPaginationType": "full_numbers"
+    });
+    oTable2 = $('#_bookmarks').dataTable({
+        
+        "sPaginationType": "full_numbers"
+    });
+});
+</script>
+{% endblock %}
+
+

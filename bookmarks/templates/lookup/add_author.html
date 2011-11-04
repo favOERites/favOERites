@@ -1,0 +1,7 @@
+<link rel="stylesheet" href="{{MEDIA_URL}}css/style.css" />
+
+
+<form action="{% url bookmarks.views.add_author %}" method="post" id="add_author">
+	{% csrf_token %}
+	{{form.as_ul}}
+</form>

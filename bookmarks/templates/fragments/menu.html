@@ -1,0 +1,44 @@
+<ul class="topnav">  
+    <li><a href="/">Home</a></li>  
+    <li>  
+        <a href="{% url bookmarks.browse_views.bookmarks %}">Bookmarks</a>  
+        <ul class="subnav">  
+            {% if request.user.is_authenticated %}
+              <li><a href="{% url bookmarks.bookmark_views.add request.user.username %}">Add bookmark</a></li>
+              <li><a href="{% url bookmarks.bookmark_views.index request.user.username %}">Your bookmarks</a></li>          
+            {% endif %}
+            <li><a href="{% url bookmarks.browse_views.bookmarks %}">Browse bookmarks</a></li>
+        </ul>  
+    </li>  
+    <li>  
+        <a href="{% url bookmarks.browse_views.playlists %}">Playlists</a>  
+        <ul class="subnav">  
+            {% if request.user.is_authenticated %}
+              <li><a href="{% url bookmarks.playlist_views.add request.user.username %}">Add playlist</a></li>
+              <li><a href="{% url bookmarks.playlist_views.index request.user.username %}">Your playlists</a></li>          
+            {% endif %}
+              <li><a href="{% url bookmarks.browse_views.playlists %}">Browse playlists</a></li>
+        </ul>  
+    </li>  
+    <li><a href="{% url bookmarks.browse_views.users %}">People</a></li>
+    <li><a href="{% url haystack_search %}">Search</a></li>
+    
+    {% if request.user.is_authenticated %} 
+    <li style="float:right;"><a href="/auth/logout/">Logout</a></li> 
+    <li style="float:right;">
+    	<a href="/auth/user/">Your Account</a>
+    </li>
+    
+    {% else %}    
+    <li style="float:right;"><a href="/auth/">Login</a></li>
+    {% endif %}
+	<li style="float:right;">
+		<a href="/about/">About</a>
+		<ul class="subnav"> 
+			<li><a href="/contact/">Contact Us</a></li>	
+			<li><a href="https://bitbucket.org/jameso/oerbookmarking/">Source Code</a></li>
+		</ul>
+		
+	</li>
+    
+</ul> 

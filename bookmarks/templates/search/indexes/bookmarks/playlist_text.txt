@@ -1,0 +1,5 @@
+{{ object.title }}
+{{ object.slug }}
+{% for bookmark in object.bookmarks.all %}
+	{{bookmark.title}} {{bookmark.url}} 
+{% endfor %}

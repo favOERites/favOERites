@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}
+{% if tag %}Bookmarks tagged as "{{tag}}"{% else %}All Bookmarks{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if tag %}
+	<a href="{% url latest-tag tag.title %}" title="{{tag}} latest bookmarks feed">
+		<img class="rss_icon" src="{{MEDIA_URL}}images/icons/feed24.png" />
+	</a>
+{% endif %}
+
+<h2>{% if tag %}Bookmarks tagged as "{{tag}}"{% else %}All Bookmarks{% endif %}</h2>
+<table id="tagged_bookmarks" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Tags</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for bookmark in bookmarks|dictsortreversed:"score" %}
+    <tr>
+        <td>
+            <a href="{{bookmark.get_absolute_url}}" title="{{bookmark.title}}" class="bookmark">{{bookmark.title}}</a>
+        </td>
+        <td>
+            {{bookmark.url}}
+        </td>
+        <td>
+             {% for t in bookmark.tags %}<a href="{% url bookmarks.views.tags t %}" class="tag">{{t}}</a>{% endfor %}
+        </td>
+        <td>{{bookmark.score}}</td>
+    </tr> 
+{% empty %}
+        <tr><td class="message error">No Bookmarks were found</td></tr>
+{% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#tagged_bookmarks').dataTable({
+        "sPaginationType": "full_numbers"
+    });
+});
+</script>
+{% endblock %}

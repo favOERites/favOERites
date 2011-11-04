@@ -1,0 +1,21 @@
+{% extends "small_base.html" %}
+
+
+{% block title %} Add a bookmark {% endblock %}
+
+{% block content %}
+<style type="text/css">
+    form ul, form ul li {margin-top:0; width:80%;}
+</style>
+<div style="width:80%;">
+<form method="POST" action="">
+	{% csrf_token %}
+	<ul>
+		{{form.as_ul}}
+		<li style="margin-top:6px;">
+			<button type="submit" value="Save bookmark" class="button positive"/><img src="{{MEDIA_URL}}images/icons/disk.png" alt="save"/>Save Bookmark</button>
+		</li>
+	</ul>
+</form>
+</div>
+{% endblock %}

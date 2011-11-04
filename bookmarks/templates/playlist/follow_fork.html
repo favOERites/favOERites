@@ -1,0 +1,17 @@
+{% load playlist_helper %}
+
+{% if request.user|is_following:playlist %}	
+	You are currently following this playlist, <a class="button" href="{% url bookmarks.playlist_views.unfollow playlist.user.username playlist.slug %}">unfollow?</a>
+{% else %}
+	<a class="button" href="{% url bookmarks.playlist_views.follow playlist.user.username playlist.slug %}"><img src="{{MEDIA_URL}}images/icons/asterisk.png" alt="fork"/>follow</a>
+{% endif %}
+<a href="/about/guide/follow/" class="whats_this" title="Whats this - fork guide">whats this?</a>
+
+{% with fork=request.user|is_forked:playlist %}
+	{% if fork %}
+		<p>You have a <a href="{{fork.get_absolute_url}}">fork of this playlist</a></p>
+	{% else %}	
+			<a class="button" href="{% url bookmarks.playlist_views.fork playlist.user.username playlist.slug %}"><img src="{{MEDIA_URL}}images/icons/arrow-split.png" alt="fork"/>fork</a>					 
+			<a href="/about/guide/fork/" class="whats_this" title="Whats this - fork guide">whats this?</a>
+	{% endif %}
+{% endwith %}

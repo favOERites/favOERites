@@ -1,0 +1,131 @@
+{% load tagging_tags %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>FavOERites - {% block title%}{% endblock %}</title>
+
+	<link rel="alternate" type="application/rss+xml" title="Latest bookmarks feed" href="{% url latest-bookmarks %}" />
+	<link rel="alternate" type="application/rss+xml" title="Top bookmarks feed" href="{% url top-bookmarks %}" />
+	<link rel="alternate" type="application/rss+xml" title="Top playlist feed" href="{% url playlist-top %}" />
+	<link rel="alternate" type="application/rss+xml" title="Most followed playlist feed" href="{% url playlist-followers %}" />
+    
+    <!-- fonts -->
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Special+Elite">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+    
+    
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/typography.css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/960_12_col.css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/datatable.css" />
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/ui-smoothness/jquery-ui-1.8.16.custom.css" />
+	<link rel="stylesheet" href="{{MEDIA_URL}}javascript/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/style.css" />
+    
+    <script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery-1.6.2.min.js"></script>
+    {% block local_css %}{% endblock %}
+
+</head>
+<body>
+    <div id="header">
+        <div class="container_12">
+            <div class="grid_6">
+                <h1><a href="/">Fav<span class="highlight">OER</span>ites</a></h1>
+            </div>
+            <div class="grid_6 search">
+                 <p>Copy the button (below) to the "favorites" or "bookmarks" in your browser, and click on it to bookmark any page you like.</p>
+                    <a class="button small positive" href="javascript:(function(){try{function loadScript(scriptSrc,runScript){var script=document.createElement('script');script.setAttribute('src',scriptSrc);script.setAttribute('type','text/javascript');document.getElementsByTagName('head')[0].appendChild(script);var loaded=false;var loadFunction=function(){if(loaded)return;loaded=true;if(runScript==1){oerbookmarklet();}};script.onload=loadFunction;script.onreadystatechange = loadFunction;}try{var jqueryIsLoaded=jQuery;jQueryIsLoaded=true;}catch(err){var jQueryIsLoaded=false;}if(jQueryIsLoaded){}else{loadScript('http://{{request.get_host}}{{MEDIA_URL}}javascript/jquery-1.6.2.min.js',0);}try{fbx=$.fancybox();}catch(e){var css=document.createElement('link');css.rel='stylesheet';css.type='text/css';css.href='http://{{request.get_host}}{{MEDIA_URL}}css/jquery.fancybox-1.3.4.css';document.getElementsByTagName('head')[0].appendChild(css);loadScript('http://{{request.get_host}}{{MEDIA_URL}}javascript/jquery.fancybox-1.3.4.js',0);}try{oerbookmarklet();}catch(e){loadScript('http://{{request.get_host}}{{MEDIA_URL}}javascript/bookmarklet.js',1);}}catch(e){window.location='http://{{request.get_host}}';}})();">
+                    <img src="{{MEDIA_URL}}images/icons/book--plus.png" alt=""/>add to FavOERites</a>
+            </div> 
+            
+        </div>
+        <div class="clear"></div>
+        
+        <div id="menu">
+            <div class="container_12">
+                <div class="grid_12">
+                    {% include "fragments/menu.html" %}
+                </div>
+            </div>
+        </div> 
+             
+    </div>
+
+    <div id="content">
+        <div class="container_12">
+        <!--//We'll put this back in if we decide to support breadcrumbs
+            <div class="grid_12 breadcrumbs">
+                Home > Breadcrumbs > Blah 
+            </div>
+            -->
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div class="grid_12 message{% if message.tags %} {{ message.tags }}{% endif %}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <div class="clear"></div>
+            
+          <div class="grid_12">
+              {% block content %}
+              <h2>Welcome</h2>
+              <p>Welcome to the OER Bookmarking system</p>
+              {% endblock %}
+              {% block side %}{% endblock %}
+          </div>
+          
+          <div class="clear"></div>
+                
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container_12">
+          <div class="grid_6">
+            &copy;2011 Newcastle university<br/>
+            Download the source code from <a href="https://bitbucket.org/jameso/oerbookmarking">Bitbucket</a>
+          </div>
+          <div class="grid_6">
+              {% block footer %}
+              <h5>Popular Tags</h5>
+               <p>
+{% tag_cloud_for_model bookmarks.Bookmark as tags with steps=6 min_count=1 distribution=log %}
+{% for tag in tags %}
+<a href="{% url bookmarks.views.tags tag %}" class="cloud-{{tag.font_size|add:"2"}}">{{tag.name}}</a> 
+{% endfor %}</p>
+              {% endblock %}             
+          </div>
+          <div class="clear"></div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery-autocomplete/jquery.autocomplete.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){  
+      
+        $("ul.subnav").parent().append("<span></span>"); //Only shows drop down trigger when js is enabled (Adds empty span tag after ul.subnav*)  
+      
+        $("ul.topnav li span").click(function() { //When trigger is clicked...  
+      
+            //Following events are applied to the subnav itself (moving subnav up and down)  
+            $(this).parent().find("ul.subnav").slideDown('fast').show(); //Drop down the subnav on click  
+      
+            $(this).parent().hover(function() {  
+            }, function(){  
+                $(this).parent().find("ul.subnav").slideUp('slow'); //When the mouse hovers out of the subnav, move it back up  
+            });  
+      
+            //Following events are applied to the trigger (Hover events for the trigger)  
+            }).hover(function() {  
+                $(this).addClass("subhover"); //On hover over, add class "subhover"  
+            }, function(){  //On Hover Out  
+                $(this).removeClass("subhover"); //On hover out, remove class "subhover"  
+        });  
+      
+    });  
+    </script>
+    {% block local_javascript %}{% endblock %}
+</body>
+</html>

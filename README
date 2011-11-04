@@ -1,0 +1,38 @@
+The OER Bookmarking System.
+
+This project has been funded by JISC and the lead partners are Newcastle 
+University.  We are building a bookmarking system specifically for recording 
+Open Educational Resources (OER).
+
+The system is built using Django version 1.3.
+
+PREREQUISITES -
+
+You will need to install the following Django apps for this to work - 
+
+1. Django-social-auth (https://github.com/omab/django-social-auth)
+2. Django-tagging (http://code.google.com/p/django-tagging/)
+3. Django-ajax-selects (http://code.google.com/p/django-ajax-selects/)
+4. Django-tagging-autocomple (http://code.google.com/p/django-tagging-autocomplete/)
+5. Django-haystack (http://haystacksearch.org/) * 
+6. Django-tastypie (https://github.com/toastdriven/django-tastypie)
+
+We are using the following Javascript libraries
+
+1. JQuery (http://jquery.com)
+2. JQuery UI - mainly for the themeroller (http://jqueryui.com) and autocomplete
+3. DataTables (http://datatables.net)
+4. JQuery plugin: Autocomplete (http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/)
+
+The Menu navigation was taken from 
+http://www.sohtanaka.com/web-design/examples/drop-down-menu/
+
+We are also using a couple of icons from the Fugue icon set 
+(http://p.yusukekamiyamane.com/icons/search/fugue/), which is licensed under a 
+Creative Commons Attribution 3.0 license.
+
+* django haystack can be customised to used several search backends.
+This system is setup as default to use Whoosh (http://whoosh.ca/) which is include in django haystack, to 
+change this see the haystack documentation (http://docs.haystacksearch.org/dev/tutorial.html#configuration) 
+Notes: 	1.) In settings.py HAYSTACK_WHOOSH_PATH must point to a file location on your server.
+		2.) 'python manage.py rebuild_index' must be run as a cronjob on a regular basis to update the search index

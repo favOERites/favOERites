@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Logged in{% endblock %}
+
+{% block content %}
+
+<div class="message info">You are logged in as {{user.username}} {% if user.email %}[{{ user.email|default:"Not provided" }}]{% endif %}</div>
+<div class="grid_8">
+  <table style="width:90%;">
+    <tr class="even"><th style="width:140px;">Username:</th> <td>{{ user.username }}</td></tr>
+    <tr class="odd"><th>Email:</th> <td>{{ user.email|default:"Not provided" }}</td></tr>
+    <tr class="even"><th>First name:</th> <td>{{ user.first_name|default:"Not provided" }}</td></tr>
+    <tr class="odd"><th>Last name:</th> <td>{{ user.last_name|default:"Not provided" }}</td></tr>
+    <tr class="even"><th>Api key:</th> <td>{{ user.api_key.key|default:"No created" }}</td></tr>
+  </table>
+</div>
+<div class="clear"></div>
+<div>
+{% if accounts %}
+  <h3>Disconnect accounts</h3>
+  <ul>
+  {% for account in accounts %}
+    <li><a href={% url socialauth_disconnect_individual account.provider account.id %}>{{ account.provider|title }} (ID {{ account.id }})</a></li>
+  {% endfor %}
+  </ul>
+{% endif %}
+
+  <h3>Associate new Accounts:</h3>
+  {% for name, backend in backends.oauth %}
+  
+  {% if name in allowed_names %}
+    <a rel="nofollow" href="{% url socialauth_associate_begin name %}"><img src="{{MEDIA_URL}}images/{{ name }}.png" alt="{{ name|title }}" title="{{ name|title }}"/></a>
+  {% endif %}
+  {% endfor %}
+  
+  {% for name, backend in backends.oauth2 %}
+  {% if name in allowed_names %}
+    <a rel="nofollow" href="{% url socialauth_associate_begin name %}"><img src="{{MEDIA_URL}}images/{{ name }}.png" alt="{{ name|title }}" title="{{ name|title }}"/></a>
+  {% endif %}
+  {% endfor %}
+  
+  {% for name, backend in backends.openid %}
+      {% if name in allowed_names %}
+    <a rel="nofollow" href="{% url socialauth_associate_begin name %}"><img src="{{MEDIA_URL}}images/{{ name }}.png" alt="{{ name|title }}" title="{{ name|title }}"/></a>
+      {% endif %}
+  {% endfor %}
+  
+    <form action="{% url socialauth_associate_begin "openid" %}" method="post">{% csrf_token %}
+        <label for="openid_identifier">Or associate another <a href="http://openid.net/" title="OpenId" class="openid">OpenId</a></label>
+        <input id="openid_identifier" type="text" value="" name="openid_identifier" class="openid"/>
+        <button type="submit" value="Login" class="button">Associate</button>
+        <p class="helptext">For example, you could associate your <a href="https://www.myopenid.com/" title="My OpenId" class="openid">myopenid</a></p>
+    </form>
+
+</div>
+{% endblock %}

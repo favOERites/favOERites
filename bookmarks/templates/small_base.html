@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>OER Bookmarking - {% block title%}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Special+Elite">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/reset.css" />
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/typography.css" />
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/960_12_col.css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/datatable.css" />
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/ui-smoothness/jquery-ui-1.8.16.custom.css" />
+	<link rel="stylesheet" href="{{MEDIA_URL}}javascript/jquery-autocomplete/jquery.autocomplete.css" type="text/css" />
+    <link rel="stylesheet" href="{{MEDIA_URL}}css/style.css" />
+    <script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery-1.6.2.min.js"></script>
+    {% block local_css %}{% endblock %}
+</head>
+<body style="min-width:100%;width:100%; margin:0;">
+    
+    <div id="header" style="margin:0; padding:0;">
+        
+        <div style="float:left; padding:12px;">
+        	<h1 style="font-size:1.5em; margin-bottom:0;"><a href="/" target="_blank">Fav<span class="highlight">OER</span>ites</a></h1>
+        </div>
+    </div>
+    <div class="clear"></div>
+        
+    <div id="content" style="width:100%; margin:0; padding:0; font-size:0.85em;">
+        <div style="padding:12px;">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="message{% if message.tags %} {{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+          {% block content %}
+          <h2>Welcome</h2>
+          <p>Welcome to the OER Bookmarking system</p>
+          {% endblock %}
+
+        </div>
+    </div>
+    <div class="clear"></div>
+    
+    <div id="footer" style="margin:0; padding:0; font-size:0.75em;">
+        <div style="padding:12px;">
+            &copy;2011 Newcastle university<br/>
+        </div>
+          <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    
+    <script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery-ui-1.8.16.custom.min.js"></script>
+	<script type="text/javascript" src="{{MEDIA_URL}}javascript/jquery-autocomplete/jquery.autocomplete.js"></script>
+    {% block local_javascript %}
+    {% endblock %}
+</body>
+</html>

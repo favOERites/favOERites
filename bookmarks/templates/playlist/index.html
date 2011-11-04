@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load playlist_helper %}
+{% load humanize %}
+{% block title %} {{user}}'s playlists {% endblock %}
+
+{% block content %}
+
+{% if request.user.id == user.id %}
+	<h3>Your playlists</h3>
+{% else %}
+	<h3>{{user|title}}'s playlists</h3>
+{% endif %}
+
+{% if not playlists %}
+<div class="message error">
+{% if request.user.id == user.id %}
+    You don't 
+{% else %}
+    {{user|title}} doesn't 
+{% endif %}    
+    have any playlists</div>
+        
+<div class="clear"></div>
+{% endif %}
+
+<a href="{% url bookmarks.playlist_views.add request.user.username %}" class="small button">
+    Add a new playlist
+</a>
+
+<div class="clear"></div>
+
+<table id="my_playlists" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Followers</th>
+            <th>Bookmarks</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for playlist in playlists %}
+	<tr>
+	    <td>
+    	    <a href="{{ playlist.get_absolute_url }}" title="{{playlist.title}}" class="playlist">
+                {{playlist.title}}
+            </a>    
+	    </td>
+	    <td>{{playlist.number_of_followers}}</td>
+	    <td>{{playlist.number_of_bookmarks}}</td>
+	    <td>{{playlist.score}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+<div class="clear"></div>
+
+{% if other_playlists  %}
+<h3>Your other playlists</h3>
+<table id="following_playlists" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Your Status</th>
+            <th>Owner</th>
+            <th>Followers</th>
+            <th>Bookmarks</th>
+            <th>Score</th>
+            <th>Recently Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for playlist in other_playlists %}
+    <tr>
+        <td>
+            <a href="{{ playlist.get_absolute_url }}" title="{{playlist.title}}">
+                {{playlist.title}}
+            </a>    
+        </td>
+        <td>{% if request.user|is_editor_or_owner:playlist == 'Editor' %}Editor{%else%}Follower{% endif %}</td>
+        <td>
+        	<a href="{% url bookmarks.bookmark_views.index playlist.user.username %}" title="{{playlist.user}}'s bookmarks">
+        		{{playlist.user}}
+        	</a>
+        </td>
+        <td>{{playlist.number_of_followers}}</td>
+        <td>{{playlist.number_of_bookmarks}}</td>
+        <td>{{playlist.score}}</td>
+        <td>{{playlist.modified|naturalday}}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
+
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#my_playlists').dataTable({
+        "sPaginationType": "full_numbers"
+    });
+    {% if other_playlists %}
+    oTable = $('#following_playlists').dataTable({
+        "sPaginationType": "full_numbers"
+    });
+    {% endif %}
+});
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% load vote_helper %}
+
+{% if request.user.id != owner.id %}
+	{% if request.user|get_user_vote:object %}
+           <span class="helptext"><br/> 
+            {% if request.user|get_user_vote:object == 1 %}
+                You previously gave this the thumbs up, would you like to change that and 
+                <a class="button negative" href="{% url bookmarks.vote_views.vote -1 object.id content_type.id %}" title="Vote down">vote it down?</a>
+            {% endif %}
+    
+            {% if request.user|get_user_vote:object == -1 %}
+                You previously gave this the thumbs down, would you like to change that and 
+                <a class="button positive" href="{% url bookmarks.vote_views.vote 1 object.id content_type.id %}" title="Vote up">vote it up?</a>
+            {% endif %}
+            </span>
+	{% else %}
+    	{% if request.user.is_authenticated %}
+    		<a href="{% url bookmarks.vote_views.vote 1 object.id content_type.id %}" title="Vote up"><img src="/media/images/icons/thumb-up.png" border="0" alt="Vote Up"/></a>
+    		<a href="{% url bookmarks.vote_views.vote -1 object.id content_type.id %}" title="Vote down"><img src="/media/images/icons/thumb.png" border="0" alt="Vote Down"/></a>
+        {% endif %}
+	{% endif %}
+	
+{% endif %}

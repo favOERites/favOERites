@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %} {{user}}'s bookmarks {% endblock %}
+
+{% block content %}
+
+<a href="{% url latest-user-bookmarks user.username %}" title="{{user.username}}'s latest bookmarks feed">
+	<img class="rss_icon" src="{{MEDIA_URL}}images/icons/feed24.png" />
+</a>
+
+{% if request.user.id == user.id %}
+	<h2>Your bookmarks</h2>
+{% else %}
+	<h2>{{user|title}}'s bookmarks </h2>
+{% endif %}
+
+<table id="tagged_bookmarks" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Tags</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for bookmark in bookmarks|dictsortreversed:"score" %}
+    <tr>
+        <td>
+            <a class="bookmark" href="{{bookmark.get_absolute_url}}" title="{{bookmark.title}}">{{bookmark.title}}</a>
+        </td>
+        <td>
+            {{bookmark.url}}
+        </td>
+        <td>
+             {% for t in bookmark.tags %}<a href="{% url bookmarks.views.tags t %}" class="tag">{{t}}</a>{% endfor %}
+        </td>
+        <td>{{bookmark.score}}</td>
+    </tr> 
+
+
+{% empty %}
+        <tr><td class="message error">No Bookmarks were found</td></tr>
+{% endfor %}
+    </tbody>
+</table>
+
+<div class="rss_feeds">
+
+	<a href="{% url latest-user-bookmarks user.username %}" title="{{user.username}}'s latest bookmarks feed">
+		{{user}}'s latest bookmarks <img class="rss_icon_small" src="{{MEDIA_URL}}images/icons/feed.png" /> 
+	</a> |
+	
+	<a href="{% url top-user-bookmarks user.username %}" title="{{user.username}}'s top bookmarks feed">
+		 {{user}}'s top bookmarks <img class="rss_icon_small" src="{{MEDIA_URL}}images/icons/feed.png" /> 
+	</a>
+</div>
+
+<div class="clear"></div>
+
+{% endblock %}
+
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#tagged_bookmarks').dataTable({
+        "sPaginationType": "full_numbers"
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %} Browse {% endblock %}
+
+{% block content %}
+
+<a href="{% url top-bookmarks %}" title="Top bookmarks (score) feed">
+	<img class="rss_icon" src="{{MEDIA_URL}}images/icons/feed24.png" />
+</a>
+
+
+<h3>Top bookmarks (score)</h3>
+
+{% if not unique_bookmarks %}
+<div class="message error">No bookmarks were found</div>
+{% endif %}
+
+<table id="_bookmarks" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Tags</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for bookmark in unique_bookmarks %}
+    <tr>
+        <td>
+            <a class="bookmark" href="{% url bookmarks.bookmark_views.view bookmark.user__username bookmark.slug %}" title="{{bookmark.title}}">{{bookmark.title}}</a>
+        </td>
+        <td>
+            {{bookmark.url}} 
+        </td>
+        <td>
+             {% for t in bookmark.tags %}<a href="{% url bookmarks.views.tags t %}" class="tag">{{t}}</a>{% endfor %}
+        </td>
+        <td>{{bookmark.score|default:0}}</td>
+    </tr> 
+{% endfor %}
+    </tbody>
+</table>
+
+
+<div class="rss_feeds">
+	<a href="{% url latest-bookmarks %}" title="Latest bookmarks feed">
+		Latest bookmarks <img class="rss_icon_small" src="{{MEDIA_URL}}images/icons/feed.png" /> 
+	</a> |
+	
+	<a href="{% url top-bookmarks %}" title="Top bookmarks feed">
+		 Top bookmarks <img class="rss_icon_small" src="{{MEDIA_URL}}images/icons/feed.png" /> 
+	</a>
+</div>
+
+
+{% endblock %}
+
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#_bookmarks').dataTable({
+        
+        "sPaginationType": "full_numbers"
+    });
+});
+</script>
+{% endblock %}

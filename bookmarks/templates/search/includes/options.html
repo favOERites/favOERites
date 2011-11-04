@@ -1,0 +1,21 @@
+<h3>Ordering</h3>
+
+<ul>
+	<li><a {% if request.GET.o == None %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">Relevance	</a></li>
+	<li><a {% if request.GET.o == 'text' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&o=text{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">A-Z</a></li>
+	<li><a {% if request.GET.o == '-text' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&o=-text{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">Z-A</a></li>
+	<li><a {% if request.GET.o == '-pub_date' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&o=-pub_date{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">Latest first</a></li>
+	<li><a {% if request.GET.o == 'pub_date' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&o=pub_date{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">Oldest first</a></li>
+	<li><a {% if request.GET.o == '-votes_score' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&o=-votes_score{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">Most votes</a></li>
+	<li><a {% if request.GET.o == 'votes_score' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&o=votes_score{% if request.GET.models %}&models={{request.GET.models}}{% endif %}">Least votes</a></li>
+
+
+</ul>
+
+<h3>Filter</h3>
+
+<ul>
+	<li><a {% if request.GET.models == None %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}{% if request.GET.o %}&o={{request.GET.o}}{% endif %}">All</a></li>
+	<li><a {% if request.GET.models == 'bookmarks.bookmark' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&models=bookmarks.bookmark{% if request.GET.o %}&o={{request.GET.o}}{% endif %}">Bookmarks</a></li>
+	<li><a {% if request.GET.models == 'bookmarks.playlist' %}class="current_option"{% endif %} href="{% url haystack_search %}?q={{request.GET.q}}&models=bookmarks.playlist{% if request.GET.o %}&o={{request.GET.o}}{% endif %}">Playlists</a></li>
+</ul>

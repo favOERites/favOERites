@@ -1,0 +1,29 @@
+{% if full_playlists %}
+<span class="helptext">
+    This bookmark is in the following playlists: 
+    {% for n in full_playlists %}
+        <a href="{{ n.get_absolute_url }}" class="playlist{% ifequal n.owner request.user %} mine{% endifequal %}">{{n.title}}</a>
+    {% endfor %}
+</span><br/><br/>
+{% endif %}
+
+{% if empty_playlists %}
+<form method="post" action="/add_to_playlist/">{% csrf_token %}
+    <input type="hidden" name="bookmark" value="{{bm}}" />
+    <label for="playlist" class="helptext" style="display:inline;">Add to a playlist:</label> 
+    <select name="playlist" style="padding:0; font-size:x-small; color:#666;">
+        {% for n in empty_playlists_mine %}<option value="{{n.pk}}">{{n}}</option>{% endfor %}
+        {% for n in empty_playlists_others %}<option value="{{n.pk}}">** {{n}}</option>{% endfor %}
+    </select>
+    <button type="submit" class="button positive small" style="padding:0;">add</button>
+
+    {% if empty_playlists_others %}
+	    <br/>
+	    <label for="playlist" class="helptext" style="display:inline;">** Another users playlist you can edit!</span>
+	{% endif %}
+	
+</form>
+{% else %}
+<span class="helptext">You do not have any playlists that you can add this Bookmark to.</span>
+{% endif %}
+

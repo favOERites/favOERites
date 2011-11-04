@@ -1,0 +1,39 @@
+{% extends "small_base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="message info" style="width:80%;">You can login to this site using your existing 
+    login data from other sites.</div>
+<div class="clear"></div>  
+
+<div style="width:90%; margin:0; padding:8px;">
+  {% for name, backend in backends.oauth %}
+  {% if name in allowed_names %}
+    <a rel="nofollow" href="{% url socialauth_begin name %}"><img src="{{MEDIA_URL}}images/{{ name }}.png" alt="{{ name|title }}" title="{{ name|title }}"/></a>
+  {% endif %}
+  {% endfor %}
+  
+  {% for name, backend in backends.oauth2 %}
+  {% if name in allowed_names %}
+    <a rel="nofollow" href="{% url socialauth_begin name %}"><img src="{{MEDIA_URL}}images/{{ name }}.png" alt="{{ name|title }}" title="{{ name|title }}"/></a>
+  {% endif %}
+  {% endfor %}
+  
+  {% for name, backend in backends.openid %}
+      {% if name in allowed_names %}
+    <a rel="nofollow" href="{% url socialauth_begin name %}"><img src="{{MEDIA_URL}}images/{{ name }}.png" alt="{{ name|title }}" title="{{ name|title }}"/></a>
+      {% endif %}
+  {% endfor %}
+</div>
+
+<div class="clear"></div>
+<div style="width:90%; margin:0; padding:8px;">
+    <form action="{% url socialauth_begin "openid" %}" method="post">{% csrf_token %}
+        <label for="openid_identifier">Or login using your <a href="http://openid.net/" title="OpenId" class="openid">OpenId</a></label>
+        <input id="openid_identifier" type="text" value="" name="openid_identifier" class="openid"/>
+            <button type="submit" value="Login" class="button">Login</button>
+        <p class="helptext">For example, you could login using <a href="https://www.myopenid.com/" title="My OpenId" class="openid">myopenid</a></p>
+    </form>
+</div>
+{% endblock %}

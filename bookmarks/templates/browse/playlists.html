@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %} Browse playlists {% endblock %}
+
+{% block content %}
+
+<a href="{% url playlist-top %}" title="Top playlists feed">
+	<img class="rss_icon" src="{{MEDIA_URL}}images/icons/feed24.png" />
+</a>
+
+<h3>Browse playlists</h3>
+
+{% if not playlists %}
+<div class="message error">There are no playlists</div>
+<div class="clear"></div>
+{% endif %}
+
+<a href="{% url bookmarks.playlist_views.add request.user.username %}" class="small button">
+    Add a new playlist
+</a>
+
+<div class="clear"></div>
+
+<table id="my_playlists" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Followers</th>
+            <th>Bookmarks</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for playlist in playlists %}
+    <tr>
+        <td>
+            <a href="{{ playlist.get_absolute_url }}" title="{{playlist.title}}" class="playlist">
+                {{playlist.title}}
+            </a>    
+        </td>
+        <td>{{playlist.number_of_followers}}</td>
+        <td>{{playlist.number_of_bookmarks}}</td>
+        <td>{{playlist.score}}</td>
+    </tr>
+{% endfor %}
+	</tbody>
+</table>
+
+
+<div class="rss_feeds">
+	<a href="{% url playlist-top %}" title="Top playlists feed">
+		Top playlists <img class="rss_icon_small" src="{{MEDIA_URL}}images/icons/feed.png" /> 
+	</a> |
+	
+	<a href="{% url playlist-followers %}" title="Most followed playlists feed">
+		 Most followed playlists <img class="rss_icon_small" src="{{MEDIA_URL}}images/icons/feed.png" /> 
+	</a>
+</div>
+
+
+<div class="clear"></div>
+
+{% endblock %}
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#my_playlists').dataTable({        
+        "sPaginationType": "full_numbers"
+    });
+});
+</script>
+{% endblock %}

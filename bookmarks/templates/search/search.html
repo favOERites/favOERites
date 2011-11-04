@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %} Search {% endblock %}
+
+{% block content %}
+    <h2>Search</h2>
+
+    <form method="get" action=".">
+        <ul>
+            {{ form.as_ul }}
+            <li style="margin-top:12px;">
+              <button type="submit" value="Save bookmark" class="button positive"/>Search</button>
+            </li>
+        </ul>
+
+        {% if query %}
+            
+            <ul class="search_options">
+				{% include "search/includes/options.html" %}
+			</ul> 
+			
+			<ul class="search_results">
+				{% if page.object_list %}
+					<div class="counter">Showing {{ page.start_index }} to {{ page.end_index }} of {{ page.paginator.count }}.</div>
+				{% endif %}
+
+				<h3>Results</h3>
+
+	            {% for result in page.object_list %}
+	                <li>
+	                	{% if result.content_type == "bookmarks.bookmark" %}
+							{% include "search/includes/bookmark.html" %}
+					    {% endif %}
+					    {% if result.content_type == "bookmarks.playlist" %}
+						    {% include "search/includes/playlist.html" %}
+					    {% endif %}	
+	                </li>
+	            {% empty %}
+	                <li>No results found.</li>
+	            {% endfor %}
+			</ul>
+			
+
+			
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}{% if request.GET.models %}&models={{request.GET.models}}{% endif %}{% if request.GET.o %}&o={{request.GET.o}}{% endif %}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}{% if request.GET.models %}&models={{request.GET.models}}{% endif %}{% if request.GET.o %}&o={{request.GET.o}}{% endif %}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Test Page{% endblock %}
+
+{% block content %}
+<h2>Welcome - Test Page</h2>
+
+{% if request.user.is_authenicated %}
+    <h3>Mutual bookmarks</h3>
+    
+    <ul>
+    {% for mutual_bookmark in mutual_bookmarks %}
+        <li>{{mutual_bookmark.num_mutual_bookmarks}} boomarks in common with <a href="/{{mutual_bookmark.user__username}}/">{{mutual_bookmark.user__username}}</a></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+
+<h3>Playlists</h3>
+
+<ul>
+    {% for playlist in playlists %}
+        <li>
+            <a href="{% url bookmarks.playlist_views.view playlist.user playlist.slug %}">{{playlist}}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h3>Top bookmarks (score)</h3>
+
+<ul>
+    {% for bookmark in unique_bookmarks %}
+        <li>{{bookmark.url}} ({{bookmark.score|default:0}}) </li>
+    {% endfor %}
+</ul>
+
+
+<h3>Bookmarks for url by score</h3>
+<ul>
+    {% for bookmark in bookmarks_by_url %}
+        <li>#{{bookmark.id}} - {{bookmark.url}} || {{bookmark.score|default:0}}</li>
+    {% endfor %}
+</ul>
+
+
+
+<h3>Unique Bookmark</h3>
+<ul>
+    <li>#{{unique_bookmark.id}} - {{unique_bookmark.url}} || {{unique_bookmark.score|default:0}}</li>
+</ul>
+
+
+{% endblock %}
+
+

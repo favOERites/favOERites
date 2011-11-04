@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %} Browse {% endblock %}
+
+{% block content %}
+
+<h3>People</h3>
+
+<table id="user_table" class="display" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Bookmark Count</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for user in users %}
+        <tr>
+            <td>
+                <a href="{% url bookmarks.bookmark_views.index user.user__username %}" class="person">
+                    {{user.user__username}}</a>
+            </td>
+            <td>{{user.bookmarks}}</td>
+            <td>{{user.score}}</td>
+        </tr>
+{% endfor %}
+</tbody></table>
+{% endblock %}
+
+{% block local_javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#user_table').dataTable({
+        "sPaginationType": "full_numbers"
+    });
+});
+</script>
+{% endblock %}

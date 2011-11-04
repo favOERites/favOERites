@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div class="message error">
+    Sorry.  An error was returned making it impossible to log you in.
+</div>
+    
+  {% if error_msg %}
+  <div class="clear"></div>
+  <p>The details of this error was: </p>
+  <div class="clear"></div>
+   <p>{{ error_msg }}</p>
+  {% endif %}
+</div>
+{% endblock %}

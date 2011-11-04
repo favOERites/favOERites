@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block title %} Edit a bookmark {% endblock %}
+
+{% block content %}
+<form method="POST" action=""> 
+	{% csrf_token %}
+	<ul>
+		{{form.as_ul}}
+		<li style="margin-top:12px;">
+			<button type="submit" value="Save bookmark" class="button positive"/><img src="{{MEDIA_URL}}images/icons/disk.png" alt="save"/>Save Bookmark</button>
+        </li>
+	</ul>
+</form>
+{% endblock %}

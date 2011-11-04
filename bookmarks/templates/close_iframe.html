@@ -1,0 +1,9 @@
+{% extends "small_base.html" %}
+{% block title %}  {% if messages %}
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        {% endif %} {% endblock %}
+
+{% block content %}
+{% endblock %}

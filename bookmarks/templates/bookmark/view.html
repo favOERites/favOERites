@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load comments %}
+{% load vote_helper %}
+{% load playlist_helper %}
+{% block title %} {{bookmark.title}} {% endblock %}
+
+{% block content %}
+<h3> {{bookmark.title}}</h3>
+<table class="basic" style="width:98%;">
+	<tr class="even">
+		<th style="width:120px;">Title</th>
+		<td>{{bookmark.title}}</td>
+	</tr>
+	<tr>
+		<th>URL</th>
+		<td>{{bookmark.url|urlize}}</td>
+	</tr>
+	<tr class="even">
+		<th>Description</th>
+		<td>{{bookmark.description}}</td>
+	</tr>
+	<tr>
+		<th>Keywords</th>
+		<td>
+		    {% if not bookmark.tags %}<span class="helptext">No keywords have been recorded against this bookmark</span>{% endif %}
+			{% for t in bookmark.tags|slice:":5" %}<a href="{% url bookmarks.views.tags t %}" class="tag">{{t}}</a>{% endfor %}
+		</td>
+	</tr>
+	<tr class="even">
+		<th>Score</th>
+		<td>
+		    {{bookmark.score|default:0}}
+		    {% vote_on_object_inline request bookmark %}
+		</td>
+	</tr>
+	<tr>
+	    <th>Playlists</th>
+	    <td>{% add_to_playlist %}</td>
+	</tr>
+	<tr class="even">
+		<th>Authors</th>
+		<td>
+			{% if bookmark.authors.all %}
+				{{bookmark.authors.all}}
+			{% else %}
+				<span class="helptext">No authors have been recorded against this bookmark</span>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<th>Licences</th>
+		<td>
+			{% if bookmark.licences.all %}
+				{{bookmark.licences.all}}
+			{% else %}
+				<span class="helptext">No licenses have been recorded against this bookmark</span>
+			{% endif %}
+		</td>
+	</tr>
+	<tr class="even">
+		<th>Publishers</th>
+		<td>
+			{% if bookmark.publishers.all %}
+					{{bookmark.publishers.all}}
+			{% else %}
+				<span class="helptext">No publishers have been recorded against this bookmark</span>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<th>Created</th>
+		<td>{{bookmark.created}}</td>
+	</tr>
+	<tr class="even">
+		<th>Last modified</th>
+		<td>{{bookmark.modified}}</td>
+	</tr>
+</table>
+
+{% vote_on_object request bookmark %}
+
+{% if request.user.id == bookmark.user.id %}
+	<a class="button" href="{% url bookmarks.bookmark_views.edit request.user.username bookmark.slug %}">edit</a>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+	
+	<a name="comments"></a>
+	<h4 style="border-top:#efefef 1px solid; margin-top:24px; padding-top:12px;">Comments</h4>
+	{% get_comment_count for bookmark as comment_count %}
+	{% get_comment_list for bookmark as comments %}
+	{% get_comment_form for bookmark as form %}
+	
+	{% ifequal comment_count 0 %}
+	    <div class="message info">This bookmark has no comments, be the first to add one.</div>
+	{% endifequal %}
+	
+	{% for comment in comments %}
+	    <div class="comment {% cycle 'odd' 'even' %}">
+	        {{comment.comment|striptags|linebreaksbr}}<br/>
+	        <span class="helptext">Added by {{comment.user}} on {{comment.submit_date|date:"l, jS F Y, P"}}.</span>
+	    </div>        
+	{% endfor %}
+	{% with bookmark.get_absolute_url as next %} 
+	
+	<form action="{% comment_form_target %}" method="post">
+	    <ul>
+	    {% csrf_token %}
+	        <input type="hidden" name="next" value="{{ next }}" />
+	        {% for field in form %}
+	            {% if field.is_hidden %}
+	                {{ field }}
+	            {% else %}
+	            
+	            {% if field.errors %} class="message error"{{ field.errors }}</li>{% endif %}
+	                <li
+	                {% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}
+	                {% ifequal field.name "name" %} style="display:none;"{% endifequal %}
+	                {% ifequal field.name "email" %} style="display:none;"{% endifequal %}
+	                {% ifequal field.name "url" %} style="display:none;"{% endifequal %}
+	                {% ifequal field.name "title" %} style="display:none;"{% endifequal %}>
+	                {{ field.label_tag }} {{ field }}
+	                </li>
+	            {% endif %}
+	        {% endfor %}
+	        <li style="margin-top:12px;">
+	            <button type="submit" name="submit" value="Post" class="button positive"/>
+	            <img src="{{MEDIA_URL}}images/icons/disk.png" alt="save"/>Save Comment</button>
+	        
+	        </li>
+	    </ul>
+	  </form>
+	</table>
+	{% endwith %}
+{% else %}
+    <p>Please <a href="/auth/">log in</a> to post a comment.</p>
+{% endif %}
+
+{% endblock %}

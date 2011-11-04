@@ -1,0 +1,22 @@
+{% load highlight %}
+<a class="result_title" href="{{ result.object.get_absolute_url }}">{% highlight result.object.title with request.GET.q %}</a>
+<br/>
+<a class="result_link" href="http://{{request.META.HTTP_HOST }}{{result.object.get_absolute_url}}">
+	http://{{request.META.HTTP_HOST }}{% highlight result.object.get_absolute_url with request.GET.q %}
+</a>
+
+<div class="result_desciption">
+	{{result.object.description|truncatewords:35}}
+</div>
+
+<div class="result_extra">
+	{{result.object.created|date:"d M Y"}} |
+	 
+	{% if result.votes_score == 0 %}
+		<span class="result_score_netural">{{result.votes_score}}<span>
+	{% else %}
+		<span class="result_score_{% if result.votes_score > 0 %}positive{% else %}negative{% endif %}">{{result.votes_score}}<span>
+	{% endif %}
+</div>
+
+{% comment %} FOR DEBUGING - {{result.score}} {% endcomment %}
